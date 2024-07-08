@@ -72,8 +72,29 @@ def normalize_lookalike_letters(text):
     return normalized_text
 
 
-def js_slur_handler(ctx: discord.Message, message: str):
-    pass
+def message_cleanup(msg: str):
+    msg = msg.split(" ")
+    cleaned_msg = []
+    replace_by = "javascript" if "javascript" in msg else "js"
+    for i in msg:
+        if i in J_SLURS:
+            cleaned_msg.append(i.replace(replace_by, "J-slur"))
+    return " ".join(cleaned_msg)
+
+
+async def js_slur_handler(ctx: discord.Message, message: str):
+    webhook = await ctx.channel.create_webhook(name=str(ctx.author))
+    reply = await ctx.reply(
+        "the J-slur can only be used in <#1259208950390329475>!!!!!!!!!!!!!! "
+        "<:1982manface:1259491829712289822><:1982manface:1259491829712289822>"
+    )
+    await webhook.send(
+        content=message_cleanup(message),
+        username=str(ctx.author),
+        avatar_url=ctx.author.avatar.url
+    )
+    await asyncio.sleep(2)
+    await reply.delete()
 
 
 def js_slur_checker(ctx: discord.Message):
