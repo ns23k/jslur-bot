@@ -15,60 +15,56 @@ logger = logger
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text) -> str:
-    # Define a mapping from lookalike letters to English alphabets
+def normalize_lookalike_letters(text: str) -> str:
+    # Thank you ChatGpt
     lookalike_mapping = {
-        'а': 'a', 'А': 'A',  # Cyrillic
-        'е': 'e', 'Е': 'E',  # Cyrillic
-        'о': 'o', 'О': 'O',  # Cyrillic
-        'с': 'c', 'С': 'C',  # Cyrillic
-        'р': 'p', 'Р': 'P',  # Cyrillic
-        'у': 'y', 'У': 'Y',  # Cyrillic
-        'х': 'x', 'Х': 'X',  # Cyrillic
-        'І': 'I', 'і': 'i',  # Ukrainian
-        'ѣ': 'e',  # Old Slavonic
-        'ϲ': 'c',  # Greek
-        'Ι': 'I', 'i': 'i',  # Greek
-        'Β': 'B', 'ν': 'v',  # Greek
-        'Κ': 'K', 'κ': 'k',  # Greek
-        'Μ': 'M', 'μ': 'm',  # Greek
-        'Ν': 'N', 'η': 'n',  # Greek
-        'Ο': 'O', 'ο': 'o',  # Greek
-        'Ρ': 'P', 'ρ': 'p',  # Greek
-        'Τ': 'T', 'τ': 't',  # Greek
-        'Υ': 'Y', 'υ': 'y',  # Greek
-        'Χ': 'X', 'χ': 'x',  # Greek
-        'ϒ': 'Y', 'ϓ': 'y',  # Greek
-        'Ϗ': 'P',  # Greek
-        'Ḁ': 'A', 'ḁ': 'a',  # Latin
-        'ƀ': 'b', 'ƃ': 'b',  # Latin
-        'Č': 'C', 'č': 'c',  # Latin
-        'Ð': 'D', 'ð': 'd',  # Latin
-        'Ë': 'E', 'ë': 'e',  # Latin
-        'Ɣ': 'Y', 'ɣ': 'y',  # Latin
-        'İ': 'I', 'ı': 'i',  # Latin
-        'Ḳ': 'K', 'ḳ': 'k',  # Latin
-        'ƛ': 'L', 'λ': 'l',  # Latin
-        'Ň': 'N', 'ň': 'n',  # Latin
-        'Ö': 'O', 'ö': 'o',  # Latin
-        'Ʀ': 'R', 'ɼ': 'r',  # Latin
-        'Ť': 'T', 'ť': 't',  # Latin
-        'Ū': 'U', 'ū': 'u',  # Latin
-        'Ǔ': 'U', 'ǔ': 'u',  # Latin
-        'Ẃ': 'W', 'ẃ': 'w',  # Latin
-        'Ÿ': 'Y', 'ÿ': 'y',  # Latin
-        'Ž': 'Z', 'ž': 'z',  # Latin
-        'ʙ': 'B', 'ᴍ': 'M', 'ʀ': 'R', 'ʏ': 'Y',  # Phonetic Symbols
-        'Ⅽ': 'C', 'Ⅾ': 'D', 'Ⅿ': 'M', 'Ⅹ': 'X',  # Roman Numerals
-        'ℬ': 'B', 'ℰ': 'E', 'ℒ': 'L', 'ℳ': 'M',  # Script
-        'ℙ': 'P', 'ℛ': 'R', 'ℭ': 'C', 'ℯ': 'e',  # Script
-        'ℹ': 'i', 'ℽ': 'y',  # Script
-        '⒜': 'a', '⒝': 'b', '⒞': 'c', '⒟': 'd', '⒠': 'e',  # Enclosed Alphanumeric
-        '⒡': 'f', '⒢': 'g', '⒣': 'h', '⒤': 'i', '⒥': 'j',  # Enclosed Alphanumeric
-        '⒦': 'k', '⒧': 'l', '⒨': 'm', '⒩': 'n', '⒪': 'o',  # Enclosed Alphanumeric
-        '⒫': 'p', '⒬': 'q', '⒭': 'r', '⒮': 's', '⒯': 't',  # Enclosed Alphanumeric
-        '⒰': 'u', '⒱': 'v', '⒲': 'w', '⒳': 'x', '⒴': 'y',  # Enclosed Alphanumeric
-        '⒵': 'z',  # Enclosed Alphanumeric
+        # Russian Cyrillic letters
+        'а': 'a', 'А': 'A', 'б': 'b', 'Б': 'B', 'в': 'v', 'В': 'V',
+        'г': 'g', 'Г': 'G', 'д': 'd', 'Д': 'D', 'е': 'e', 'Е': 'E',
+        'ё': 'e', 'Ё': 'E', 'ж': 'zh', 'Ж': 'ZH', 'з': 'z', 'З': 'Z',
+        'и': 'i', 'И': 'I', 'й': 'i', 'Й': 'I', 'к': 'k', 'К': 'K',
+        'л': 'l', 'Л': 'L', 'м': 'm', 'М': 'M', 'н': 'n', 'Н': 'N',
+        'о': 'o', 'О': 'O', 'п': 'p', 'П': 'P', 'р': 'r', 'Р': 'R',
+        'с': 's', 'С': 'S', 'т': 't', 'Т': 'T', 'у': 'u', 'У': 'U',
+        'ф': 'f', 'Ф': 'F', 'х': 'kh', 'Х': 'KH', 'ц': 'ts', 'Ц': 'TS',
+        'ч': 'ch', 'Ч': 'CH', 'ш': 'sh', 'Ш': 'SH', 'щ': 'shch', 'Щ': 'SHCH',
+        'ъ': '', 'Ъ': '', 'ы': 'y', 'Ы': 'Y', 'ь': '', 'Ь': '',
+        'э': 'e', 'Э': 'E', 'ю': 'yu', 'Ю': 'YU', 'я': 'ya', 'Я': 'YA',
+
+        # Greek letters
+        'α': 'a', 'Α': 'A', 'β': 'b', 'Β': 'B', 'γ': 'g', 'Γ': 'G',
+        'δ': 'd', 'Δ': 'D', 'ε': 'e', 'Ε': 'E', 'ζ': 'z', 'Ζ': 'Z',
+        'η': 'n', 'Η': 'N', 'θ': 'th', 'Θ': 'TH', 'ι': 'i', 'Ι': 'I',
+        'κ': 'k', 'Κ': 'K', 'λ': 'l', 'Λ': 'L', 'μ': 'm', 'Μ': 'M',
+        'ν': 'n', 'Ν': 'N', 'ξ': 'x', 'Ξ': 'X', 'ο': 'o', 'Ο': 'O',
+        'π': 'p', 'Π': 'P', 'ρ': 'r', 'Ρ': 'R', 'σ': 's', 'Σ': 'S',
+        'τ': 't', 'Τ': 'T', 'υ': 'u', 'Υ': 'U', 'φ': 'f', 'Φ': 'F',
+        'χ': 'ch', 'Χ': 'CH', 'ψ': 'ps', 'Ψ': 'PS', 'ω': 'o', 'Ω': 'O',
+
+        # Latin extended letters
+        'á': 'a', 'Á': 'A', 'à': 'a', 'À': 'A', 'â': 'a', 'Â': 'A',
+        'ä': 'a', 'Ä': 'A', 'ã': 'a', 'Ã': 'A', 'å': 'a', 'Å': 'A',
+        'æ': 'ae', 'Æ': 'AE', 'ç': 'c', 'Ç': 'C', 'é': 'e', 'É': 'E',
+        'è': 'e', 'È': 'E', 'ê': 'e', 'Ê': 'E', 'ë': 'e', 'Ë': 'E',
+        'í': 'i', 'Í': 'I', 'ì': 'i', 'Ì': 'I', 'î': 'i', 'Î': 'I',
+        'ï': 'i', 'Ï': 'I', 'ñ': 'n', 'Ñ': 'N', 'ó': 'o', 'Ó': 'O',
+        'ò': 'o', 'Ò': 'O', 'ô': 'o', 'Ô': 'O', 'ö': 'o', 'Ö': 'O',
+        'õ': 'o', 'Õ': 'O', 'ø': 'o', 'Ø': 'O', 'œ': 'oe', 'Œ': 'OE',
+        'ú': 'u', 'Ú': 'U', 'ù': 'u', 'Ù': 'U', 'û': 'u', 'Û': 'U',
+        'ü': 'u', 'Ü': 'U', 'ý': 'y', 'Ý': 'Y', 'ÿ': 'y', 'Ÿ': 'Y',
+
+        # Phonetic symbols and others
+        'ʙ': 'B', 'ʏ': 'Y', 'ʀ': 'R', 'ᴍ': 'M', 'ᴀ': 'A',
+        'ℬ': 'B', 'ℰ': 'E', 'ℒ': 'L', 'ℳ': 'M', 'ℙ': 'P', 'ℛ': 'R',
+        'Ⅽ': 'C', 'Ⅾ': 'D', 'Ⅿ': 'M', 'Ⅹ': 'X',
+
+        # Enclosed Alphanumeric
+        '⒜': 'a', '⒝': 'b', '⒞': 'c', '⒟': 'd', '⒠': 'e',
+        '⒡': 'f', '⒢': 'g', '⒣': 'h', '⒤': 'i', '⒥': 'j',
+        '⒦': 'k', '⒧': 'l', '⒨': 'm', '⒩': 'n', '⒪': 'o',
+        '⒫': 'p', '⒬': 'q', '⒭': 'r', '⒮': 's', '⒯': 't',
+        '⒰': 'u', '⒱': 'v', '⒲': 'w', '⒳': 'x', '⒴': 'y',
+        '⒵': 'z'
     }
 
     normalized_text = ''.join(lookalike_mapping.get(char, char) for char in text)
