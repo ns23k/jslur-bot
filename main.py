@@ -88,19 +88,20 @@ def message_cleanup(msg: str) -> str:
 
 
 async def js_slur_handler(ctx: discord.Message, message: str) -> None:
-    webhook = await ctx.channel.create_webhook(name=str(ctx.author))
+    # webhook = await ctx.channel.create_webhook(name=str(ctx.author))
     reply = await ctx.reply(
         "the J-slur can only be used in <#1259208950390329475>!!!!!!!!!!!!!! "
         "<:1982manface:1259491829712289822><:1982manface:1259491829712289822>"
     )
-    await webhook.send(
-        content=message_cleanup(message),
-        username=str(ctx.author),
-        avatar_url=ctx.author.avatar.url
-    )
+    # await webhook.send(
+    #     content=message_cleanup(message),
+    #     username=str(ctx.author.name),
+    #     avatar_url=ctx.author.avatar.url
+    # )
     await asyncio.sleep(1)
     await reply.delete()
-    await webhook.delete()
+    await ctx.delete()
+    # await webhook.delete()
 
 
 async def js_slur_checker(ctx: discord.Message) -> None:
