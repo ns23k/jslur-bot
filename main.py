@@ -81,27 +81,29 @@ def message_cleanup(msg: str) -> str:
     replace_by = "javascript" if "javascript" in msg else "js"
     for i in msg:
         if i in J_SLURS:
-            cleaned_msg.append(i.replace(replace_by, "J-slur"))
+            cleaned_msg.append(i.replace(replace_by, "`J-slur`"))
+        elif "like" in i or "love" in i:
+            cleaned_msg.append("hate")
         else:
             cleaned_msg.append(i)
     return " ".join(cleaned_msg)
 
 
 async def js_slur_handler(ctx: discord.Message, message: str) -> None:
-    # webhook = await ctx.channel.create_webhook(name=str(ctx.author))
+    webhook = await ctx.channel.create_webhook(name=str(ctx.author))
     reply = await ctx.reply(
         "the J-slur can only be used in <#1259208950390329475>!!!!!!!!!!!!!! "
         "<:1982manface:1259491829712289822><:1982manface:1259491829712289822>"
     )
-    # await webhook.send(
-    #     content=message_cleanup(message),
-    #     username=str(ctx.author.name),
-    #     avatar_url=ctx.author.avatar.url
-    # )
+    await webhook.send(
+        content=message_cleanup(message),
+        username=str(ctx.author.display_name),
+        avatar_url=ctx.author.avatar.url
+    )
     await asyncio.sleep(1)
     await reply.delete()
     await ctx.delete()
-    # await webhook.delete()
+    await webhook.delete()
 
 
 async def js_slur_checker(ctx: discord.Message) -> None:
