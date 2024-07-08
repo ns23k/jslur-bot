@@ -72,9 +72,19 @@ def normalize_lookalike_letters(text):
     return normalized_text
 
 
+def js_slur_handler(ctx: discord.Message, message: str):
+    pass
+
+
 def js_slur_checker(ctx: discord.Message):
     msg = normalize_lookalike_letters(re.sub(r'[^a-zA-Z0-9\s]+', '', ctx.content).lower())
+    slur_used = False
+    for i in J_SLURS:
+        if i in msg.split(" ") or "javascript" in msg:
+            slur_used = True
+
+    if slur_used:
+        js_slur_handler(ctx, msg)
 
 
 bot.run(os.environ.get("TOKEN"))
-
