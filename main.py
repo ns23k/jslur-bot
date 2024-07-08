@@ -82,6 +82,8 @@ def message_cleanup(msg: str) -> str:
     for i in msg:
         if i in J_SLURS:
             cleaned_msg.append(i.replace(replace_by, "J-slur"))
+        else:
+            cleaned_msg.append(i)
     return " ".join(cleaned_msg)
 
 
@@ -98,6 +100,7 @@ async def js_slur_handler(ctx: discord.Message, message: str) -> None:
     )
     await asyncio.sleep(1)
     await reply.delete()
+    await webhook.delete()
 
 
 async def js_slur_checker(ctx: discord.Message) -> None:
