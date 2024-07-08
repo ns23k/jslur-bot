@@ -22,7 +22,7 @@ def normalize_lookalike_letters(text: str) -> str:
         'а': 'a', 'А': 'A', 'б': 'b', 'Б': 'B', 'в': 'v', 'В': 'V',
         'г': 'g', 'Г': 'G', 'д': 'd', 'Д': 'D', 'е': 'e', 'Е': 'E',
         'ё': 'e', 'Ё': 'E', 'ж': 'zh', 'Ж': 'ZH', 'з': 'z', 'З': 'Z',
-        'и': 'i', 'И': 'I', 'й': 'i', 'Й': 'I', 'к': 'k', 'К': 'K',
+        'и': 'i', 'И': 'I', 'й': 'j', 'Й': 'J', 'к': 'k', 'К': 'K',
         'л': 'l', 'Л': 'L', 'м': 'm', 'М': 'M', 'н': 'n', 'Н': 'N',
         'о': 'o', 'О': 'O', 'п': 'p', 'П': 'P', 'р': 'r', 'Р': 'R',
         'с': 's', 'С': 'S', 'т': 't', 'Т': 'T', 'у': 'u', 'У': 'U',
@@ -52,9 +52,12 @@ def normalize_lookalike_letters(text: str) -> str:
         'õ': 'o', 'Õ': 'O', 'ø': 'o', 'Ø': 'O', 'œ': 'oe', 'Œ': 'OE',
         'ú': 'u', 'Ú': 'U', 'ù': 'u', 'Ù': 'U', 'û': 'u', 'Û': 'U',
         'ü': 'u', 'Ü': 'U', 'ý': 'y', 'Ý': 'Y', 'ÿ': 'y', 'Ÿ': 'Y',
+        'ĵ': 'j', 'Ĵ': 'J', 'ğ': 'g', 'Ğ': 'G', 'ş': 's', 'Ş': 'S',  # Turkish
+        'ő': 'o', 'Ő': 'O', 'ű': 'u', 'Ű': 'U',  # Hungarian
 
         # Phonetic symbols and others
         'ʙ': 'B', 'ʏ': 'Y', 'ʀ': 'R', 'ᴍ': 'M', 'ᴀ': 'A',
+        'ʃ': 'sh', 'ʒ': 'zh',  # Phonetic symbols
         'ℬ': 'B', 'ℰ': 'E', 'ℒ': 'L', 'ℳ': 'M', 'ℙ': 'P', 'ℛ': 'R',
         'Ⅽ': 'C', 'Ⅾ': 'D', 'Ⅿ': 'M', 'Ⅹ': 'X',
 
@@ -93,7 +96,7 @@ async def js_slur_handler(ctx: discord.Message, message: str) -> None:
         username=str(ctx.author),
         avatar_url=ctx.author.avatar.url
     )
-    await asyncio.sleep(2)
+    await asyncio.sleep(1)
     await reply.delete()
 
 
