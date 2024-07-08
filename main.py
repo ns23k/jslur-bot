@@ -3,15 +3,19 @@ import os
 import re
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
+from loguru import logger
 
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='.', intents=intents)
 
+logger = logger
+
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text):
+def normalize_lookalike_letters(text) -> str:
     # Define a mapping from lookalike letters to English alphabets
     lookalike_mapping = {
         'а': 'a', 'А': 'A',  # Cyrillic
@@ -72,7 +76,7 @@ def normalize_lookalike_letters(text):
     return normalized_text
 
 
-def message_cleanup(msg: str):
+def message_cleanup(msg: str) -> str:
     msg = msg.split(" ")
     cleaned_msg = []
     replace_by = "javascript" if "javascript" in msg else "js"
@@ -82,7 +86,7 @@ def message_cleanup(msg: str):
     return " ".join(cleaned_msg)
 
 
-async def js_slur_handler(ctx: discord.Message, message: str):
+async def js_slur_handler(ctx: discord.Message, message: str) -> None:
     webhook = await ctx.channel.create_webhook(name=str(ctx.author))
     reply = await ctx.reply(
         "the J-slur can only be used in <#1259208950390329475>!!!!!!!!!!!!!! "
@@ -97,15 +101,34 @@ async def js_slur_handler(ctx: discord.Message, message: str):
     await reply.delete()
 
 
-def js_slur_checker(ctx: discord.Message):
-    msg = normalize_lookalike_letters(re.sub(r'[^a-zA-Z0-9\s]+', '', ctx.content).lower())
-    slur_used = False
-    for i in J_SLURS:
-        if i in msg.split(" ") or "javascript" in msg:
-            slur_used = True
+async def js_slur_checker(ctx: discord.Message) -> None:
+    if ctx.channel.id != 1259208950390329475:
+        msg = normalize_lookalike_letters(re.sub(r'[^a-zA-Z0-9\s]+', '', ctx.content).lower())
+        slur_used = False
+        for i in J_SLURS:
+            if i in msg.split(" ") or "javascript" in msg:
+                slur_used = True
 
-    if slur_used:
-        js_slur_handler(ctx, msg)
+        if slur_used:
+            await js_slur_handler(ctx, msg)
 
 
+# MAIN BOT
+@bot.event
+async def on_ready() -> None:
+    logger.debug("BOT RUNNING")
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="J-slurs"))
+
+
+@bot.event
+async def on_message(ctx: discord.Message) -> None:
+    await js_slur_checker(ctx)
+
+
+@bot.command()
+async def ping(ctx) -> None:
+    latency = bot.latency * 1000
+    await ctx.reply(f"{latency:.2f}ms")
+
+load_dotenv()
 bot.run(os.environ.get("TOKEN"))
