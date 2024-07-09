@@ -82,8 +82,6 @@ def message_cleanup(msg: str) -> str:
     for i in msg:
         if i in J_SLURS:
             cleaned_msg.append(i.replace(replace_by, "`J-slur`"))
-        elif "like" in i or "love" in i:
-            cleaned_msg.append("hate")
         else:
             cleaned_msg.append(i)
     return " ".join(cleaned_msg)
