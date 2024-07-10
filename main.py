@@ -100,7 +100,7 @@ async def js_slur_handler(ctx: discord.Message, message: str) -> None:
     )
     await webhook.send(
         content=message_cleanup(message),
-        username=str(ctx.author.display_name),
+        username=f"{str(ctx.guild.name)} - {str(ctx.author.display_name)}",
         avatar_url=ctx.author.avatar.url
     )
     await asyncio.sleep(1)
