@@ -1,6 +1,7 @@
 import asyncio
 import os
 import re
+
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -84,7 +85,11 @@ def message_cleanup(msg: str) -> str:
             cleaned_msg.append(i.replace(replace_by, "`J-slur`"))
         else:
             cleaned_msg.append(i)
-    return " ".join(cleaned_msg)
+    _msg = " ".join(cleaned_msg)
+
+    if "java" in _msg and "script" in _msg:
+        _msg = _msg.replace("java", "J-Slur")
+    return _msg
 
 
 async def js_slur_handler(ctx: discord.Message, message: str) -> None:
@@ -109,7 +114,7 @@ async def js_slur_checker(ctx: discord.Message) -> None:
         msg = normalize_lookalike_letters(re.sub(r'[^a-zA-Z0-9\s]+', '', ctx.content).lower())
         slur_used = False
         for i in J_SLURS:
-            if i in msg.split(" ") or "javascript" in msg:
+            if i in msg.split(" ") or "javascript" in msg or ("java" in msg and "script" in msg):
                 slur_used = True
 
         if slur_used:
@@ -132,6 +137,7 @@ async def on_message(ctx: discord.Message) -> None:
 async def ping(ctx) -> None:
     latency = bot.latency * 1000
     await ctx.reply(f"{latency:.2f}ms")
+
 
 load_dotenv()
 bot.run(os.environ.get("TOKEN"))
