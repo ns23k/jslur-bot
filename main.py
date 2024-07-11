@@ -70,9 +70,9 @@ def message_cleanup(_msg: str, space_js: bool) -> str:
 
     cleaned_msg = " ".join(cleaned_msg)
     if "java" in _msg and "script" in _msg:
-        __msg = cleaned_msg.replace("java", "`J-Slur`")
+        cleaned_msg = cleaned_msg.replace("java", "`J-Slur`")
     elif space_js:
-        __msg = cleaned_msg.replace(" ", "").replace("javascript", "`J-Slur`")
+        cleaned_msg = cleaned_msg.replace(" ", "").replace("javascript", "`J-Slur`")
     return cleaned_msg
 
 
