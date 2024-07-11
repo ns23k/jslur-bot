@@ -136,6 +136,7 @@ async def on_ready() -> None:
 @bot.event
 async def on_message(ctx: discord.Message) -> None:
     await js_slur_checker(ctx)
+    await bot.process_commands(ctx)
 
 
 @bot.command()
