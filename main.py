@@ -16,8 +16,8 @@ logger = logger
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text: str) -> str:
-    # Thank you ChatGpt
+def normalize_lookalike_letters(text):
+    # Extended mapping from lookalike letters to English alphabets
     lookalike_mapping = {
         # Russian Cyrillic letters
         'а': 'a', 'А': 'A', 'б': 'b', 'Б': 'B', 'в': 'v', 'В': 'V',
@@ -71,13 +71,21 @@ def normalize_lookalike_letters(text: str) -> str:
         '⒵': 'z'
     }
 
+    # Replace lookalike characters in the text
     normalized_text = ''.join(lookalike_mapping.get(char, char) for char in text)
 
     return normalized_text
 
 
-def message_cleanup(msg: str) -> str:
-    msg = msg.split(" ")
+def russian_normalize(text: str) -> str:
+    dict_ = {"a": "а", "r": "г", "c": "с", "t": "т"}
+    for i in dict_.keys():
+        text.replace(i, dict_[i])
+    return text
+
+
+def message_cleanup(_msg: str, space_js: bool) -> str:
+    msg = _msg.split(" ")
     cleaned_msg = []
     replace_by = "javascript" if "javascript" in msg else "js"
     for i in msg:
@@ -88,18 +96,20 @@ def message_cleanup(msg: str) -> str:
     _msg = " ".join(cleaned_msg)
 
     if "java" in _msg and "script" in _msg:
-        _msg = _msg.replace("java", "J-Slur")
+        _msg = _msg.replace("java", "`J-Slur`")
+    elif space_js:
+        _msg = _msg.replace(" ", "").replace("javascript", "`J-Slur`")
     return _msg
 
 
-async def js_slur_handler(ctx: discord.Message, message: str) -> None:
+async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool) -> None:
     webhook = await ctx.channel.create_webhook(name=str(ctx.author))
     reply = await ctx.reply(
         "the J-slur can only be used in <#1259208950390329475>!!!!!!!!!!!!!! "
         "<:1982manface:1259491829712289822><:1982manface:1259491829712289822>"
     )
     await webhook.send(
-        content=message_cleanup(message),
+        content=message_cleanup(message, space_check),
         username=f"{str(ctx.author.display_name)} - {str(ctx.author)}",
         avatar_url=ctx.author.avatar.url
     )
@@ -111,14 +121,16 @@ async def js_slur_handler(ctx: discord.Message, message: str) -> None:
 
 async def js_slur_checker(ctx: discord.Message) -> None:
     if ctx.channel.id != 1259208950390329475:
-        msg = normalize_lookalike_letters(re.sub(r'[^a-zA-Z0-9\s]+', '', ctx.content).lower())
+        regex = re.sub(r'[^a-zA-ZА-Яа-яЁё0-9\s]', '', ctx.content)
+        msg = normalize_lookalike_letters(regex.lower())
         slur_used = False
+        js_space_check = "javascript" in msg.replace(" ", "")
         for i in J_SLURS:
-            if i in msg.split(" ") or "javascript" in msg or ("java" in msg and "script" in msg):
+            if i in msg.split(" ") or "javascript" in msg or ("java" in msg and "script" in msg) or js_space_check:
                 slur_used = True
 
         if slur_used:
-            await js_slur_handler(ctx, msg)
+            await js_slur_handler(ctx, msg, js_space_check)
 
 
 # MAIN BOT
