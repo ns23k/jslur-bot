@@ -145,5 +145,10 @@ async def ping(ctx) -> None:
     await ctx.reply(f"{latency:.2f}ms")
 
 
+@bot.event
+async def on_message_edit(ctx):
+    await js_slur_checker(ctx)
+
+
 load_dotenv()
 bot.run(os.environ.get("TOKEN"))
