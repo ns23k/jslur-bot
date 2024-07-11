@@ -77,13 +77,6 @@ def normalize_lookalike_letters(text):
     return normalized_text
 
 
-def russian_normalize(text: str) -> str:
-    dict_ = {"a": "а", "r": "г", "c": "с", "t": "т"}
-    for i in dict_.keys():
-        text.replace(i, dict_[i])
-    return text
-
-
 def message_cleanup(_msg: str, space_js: bool) -> str:
     msg = _msg.split(" ")
     cleaned_msg = []
