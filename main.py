@@ -17,9 +17,9 @@ J_SLURS = ["javascript", "js"]
 
 
 def normalize_lookalike_letters(text):
-    # Extended mapping from lookalike letters to English alphabets, including all Cyrillic letters
+    # Extended mapping from lookalike letters to English alphabets, including a comprehensive Cyrillic alphabet
     lookalike_mapping = {
-        # Russian Cyrillic letters (including more comprehensive Cyrillic alphabet)
+        # Russian Cyrillic letters
         'а': 'a', 'А': 'A', 'б': 'b', 'Б': 'B', 'в': 'v', 'В': 'V',
         'г': 'g', 'Г': 'G', 'д': 'd', 'Д': 'D', 'е': 'e', 'Е': 'E',
         'ё': 'e', 'Ё': 'E', 'ж': 'zh', 'Ж': 'ZH', 'з': 'z', 'З': 'Z',
@@ -33,10 +33,15 @@ def normalize_lookalike_letters(text):
         'э': 'e', 'Э': 'E', 'ю': 'yu', 'Ю': 'YU', 'я': 'ya', 'Я': 'YA',
 
         # Additional Cyrillic letters
-        'џ': 'dz', 'Џ': 'DZ', 'ђ': 'dj', 'Ђ': 'DJ', 'є': 'e', 'Є': 'E',
-        'і': 'i', 'І': 'I', 'ї': 'yi', 'Ї': 'YI', 'љ': 'lj', 'Љ': 'LJ',
-        'њ': 'nj', 'Њ': 'NJ', 'ћ': 'c', 'Ћ': 'C', 'ќ': 'k', 'Ќ': 'K',
-        'ў': 'u', 'Ў': 'U', 'ј': 'j', 'Ј': 'J', 'ґ': 'g', 'Ґ': 'G',
+        'ї': 'yi', 'Ї': 'YI', 'є': 'e', 'Є': 'E', 'і': 'i', 'І': 'I',
+        'ґ': 'g', 'Ґ': 'G', 'ў': 'u', 'Ў': 'U', 'ј': 'j', 'Ј': 'J',
+        'љ': 'lj', 'Љ': 'LJ', 'њ': 'nj', 'Њ': 'NJ', 'ћ': 'c', 'Ћ': 'C',
+        'ќ': 'k', 'Ќ': 'K', 'ў': 'u', 'Ў': 'U', 'ђ': 'dj', 'Ђ': 'DJ',
+        'џ': 'dz', 'Џ': 'DZ', 'ҕ': 'gh', 'Ҕ': 'GH', 'є': 'ye', 'Є': 'YE',
+        'ѣ': 'e', 'Ѣ': 'E', 'ѳ': 'th', 'Ѳ': 'TH', 'ѵ': 'v', 'Ѵ': 'V',
+        'ѯ': 'ks', 'Ѯ': 'KS', 'ѱ': 'ps', 'Ѱ': 'PS', 'ѡ': 'o', 'Ѡ': 'O',
+        'ѫ': 'u', 'Ѫ': 'U', 'ѭ': 'yu', 'Ѭ': 'YU', 'ѿ': 'ot', 'Ѿ': 'OT',
+        'ҋ': 'ch', 'Ҍ': 'CH', 'ҍ': 'c', 'Ҏ': 'C', 'ѩ': 'ya', 'Ѩ': 'YA',
 
         # Greek letters
         'α': 'a', 'Α': 'A', 'β': 'b', 'Β': 'B', 'γ': 'g', 'Γ': 'G',
