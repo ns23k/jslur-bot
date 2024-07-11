@@ -16,7 +16,7 @@ logger = logger
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text):
+def normalize_lookalike_letters(text: str) -> str:
     # Extended mapping from lookalike letters to English alphabets
     lookalike_mapping = {
         # Russian Cyrillic letters
