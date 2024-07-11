@@ -53,7 +53,7 @@ def normalize_lookalike_letters(input_string: str) -> str:
     }
 
     # Convert the input string
-    converted_string = ''.join(conversion_map.get(char, char) for char in input_string)
+    converted_string = ' '.join(conversion_map.get(char, char) for char in input_string)
 
     return converted_string
 
