@@ -68,12 +68,12 @@ def message_cleanup(_msg: str, space_js: bool) -> str:
         else:
             cleaned_msg.append(i)
 
-    __msg = " ".join(cleaned_msg)
+    cleaned_msg = " ".join(cleaned_msg)
     if "java" in _msg and "script" in _msg:
-        __msg = __msg.replace("java", "`J-Slur`")
+        __msg = cleaned_msg.replace("java", "`J-Slur`")
     elif space_js:
-        __msg = __msg.replace(" ", "").replace("javascript", "`J-Slur`")
-    return __msg
+        __msg = cleaned_msg.replace(" ", "").replace("javascript", "`J-Slur`")
+    return cleaned_msg
 
 
 async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool) -> None:
