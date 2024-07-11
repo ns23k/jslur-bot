@@ -16,7 +16,7 @@ logger = logger
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text: str) -> str:
+def normalize_lookalike_letters(text):
     # Extended mapping from lookalike letters to English alphabets
     lookalike_mapping = {
         # Russian Cyrillic letters
@@ -146,7 +146,7 @@ async def ping(ctx) -> None:
 
 
 @bot.event
-async def on_message_edit(ctx):
+async def on_message_edit(_, ctx):
     await js_slur_checker(ctx)
 
 
