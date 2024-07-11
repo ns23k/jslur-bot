@@ -53,7 +53,7 @@ def normalize_lookalike_letters(input_string: str) -> str:
     }
 
     # Convert the input string
-    converted_string = ' '.join(conversion_map.get(char, char) for char in input_string)
+    converted_string = ''.join(conversion_map.get(char, char) for char in input_string)
 
     return converted_string
 
@@ -67,13 +67,13 @@ def message_cleanup(_msg: str, space_js: bool) -> str:
             cleaned_msg.append(i.replace(replace_by, "`J-slur`"))
         else:
             cleaned_msg.append(i)
-    _msg = " ".join(cleaned_msg)
 
+    __msg = " ".join(cleaned_msg)
     if "java" in _msg and "script" in _msg:
-        _msg = _msg.replace("java", "`J-Slur`")
+        __msg = __msg.replace("java", "`J-Slur`")
     elif space_js:
-        _msg = _msg.replace(" ", "").replace("javascript", "`J-Slur`")
-    return _msg
+        __msg = __msg.replace(" ", "").replace("javascript", "`J-Slur`")
+    return __msg
 
 
 async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool) -> None:
