@@ -93,18 +93,23 @@ async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool)
     await webhook.delete()
 
 
-async def js_slur_checker(ctx: discord.Message) -> None:
-    if ctx.channel.id != 1259208950390329475:
-        regex = re.sub(r'[^\w\sА-Яа-яЁё]', '', ctx.content)
-        msg = normalize_lookalike_letters(regex.lower()).lower()
-        slur_used = False
-        js_space_check = "javascript" in msg.replace(" ", "")
-        for i in J_SLURS:
-            if i in msg.split(" ") or "javascript" in msg or ("java" in msg and "script" in msg) or js_space_check:
-                slur_used = True
+CHARACTER_REGEX = re.compile(r'[^\w\sА-Яа-яЁё]')
 
-        if slur_used:
-            await js_slur_handler(ctx, msg, js_space_check)
+
+async def js_slur_check(ctx: discord.Message) -> None:
+    if ctx.channel.id == 1259208950390329475:
+        return
+
+    normalized_message = normalize_lookalike_letters(CHARACTER_REGEX.sub('', ctx.content).lower())
+    normalized_message_no_spaces = normalized_message.replace(" ", "")
+    js_space_check = "javascript" in normalized_message_no_spaces
+
+    slur_used = (any(word in normalized_message.split() for word in J_SLURS)
+                 or 'javascript' in normalized_message_no_spaces
+                 or ('java' in normalized_message_no_spaces and 'script' in normalized_message_no_spaces))
+
+    if slur_used:
+        await js_slur_handler(ctx, normalized_message, js_space_check)
 
 
 # MAIN BOT
@@ -116,7 +121,7 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_message(ctx: discord.Message) -> None:
-    await js_slur_checker(ctx)
+    await js_slur_check(ctx)
     await bot.process_commands(ctx)
 
 
@@ -128,7 +133,7 @@ async def ping(ctx) -> None:
 
 @bot.event
 async def on_message_edit(_, ctx):
-    await js_slur_checker(ctx)
+    await js_slur_check(ctx)
 
 
 load_dotenv()
