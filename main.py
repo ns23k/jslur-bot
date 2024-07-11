@@ -16,76 +16,46 @@ logger = logger
 J_SLURS = ["javascript", "js"]
 
 
-def normalize_lookalike_letters(text):
-    # Extended mapping from lookalike letters to English alphabets, including a comprehensive Cyrillic alphabet
-    lookalike_mapping = {
-        # Russian Cyrillic letters
-        'а': 'a', 'А': 'A', 'б': 'b', 'Б': 'B', 'в': 'v', 'В': 'V',
-        'г': 'g', 'Г': 'G', 'д': 'd', 'Д': 'D', 'е': 'e', 'Е': 'E',
-        'ё': 'e', 'Ё': 'E', 'ж': 'zh', 'Ж': 'ZH', 'з': 'z', 'З': 'Z',
-        'и': 'i', 'И': 'I', 'й': 'j', 'Й': 'J', 'к': 'k', 'К': 'K',
-        'л': 'l', 'Л': 'L', 'м': 'm', 'М': 'M', 'н': 'n', 'Н': 'N',
-        'о': 'o', 'О': 'O', 'п': 'p', 'П': 'P', 'р': 'r', 'Р': 'R',
-        'с': 's', 'С': 'S', 'т': 't', 'Т': 'T', 'у': 'u', 'У': 'U',
-        'ф': 'f', 'Ф': 'F', 'х': 'kh', 'Х': 'KH', 'ц': 'ts', 'Ц': 'TS',
-        'ч': 'ch', 'Ч': 'CH', 'ш': 'sh', 'Ш': 'SH', 'щ': 'shch', 'Щ': 'SHCH',
-        'ъ': '', 'Ъ': '', 'ы': 'y', 'Ы': 'Y', 'ь': '', 'Ь': '',
-        'э': 'e', 'Э': 'E', 'ю': 'yu', 'Ю': 'YU', 'я': 'ya', 'Я': 'YA',
+def normalize_lookalike_letters(input_string: str) -> str:
+    # Mapping of characters to their base form
+    conversion_map = {
+        # J mappings
+        "J": "J", "Ϳ": "J", "Ј": "J", "Ꭻ": "J", "ᒍ": "J", "ꓙ": "J", "Ʝ": "J", "ꭻ": "J", "Ｊ": "J",
 
-        # Additional Cyrillic letters
-        'ї': 'yi', 'Ї': 'YI', 'є': 'e', 'Є': 'E', 'і': 'i', 'І': 'I',
-        'ґ': 'g', 'Ґ': 'G', 'ў': 'u', 'Ў': 'U', 'ј': 'j', 'Ј': 'J',
-        'љ': 'lj', 'Љ': 'LJ', 'њ': 'nj', 'Њ': 'NJ', 'ћ': 'c', 'Ћ': 'C',
-        'ќ': 'k', 'Ќ': 'K', 'ў': 'u', 'Ў': 'U', 'ђ': 'dj', 'Ђ': 'DJ',
-        'џ': 'dz', 'Џ': 'DZ', 'ҕ': 'gh', 'Ҕ': 'GH', 'є': 'ye', 'Є': 'YE',
-        'ѣ': 'e', 'Ѣ': 'E', 'ѳ': 'th', 'Ѳ': 'TH', 'ѵ': 'v', 'Ѵ': 'V',
-        'ѯ': 'ks', 'Ѯ': 'KS', 'ѱ': 'ps', 'Ѱ': 'PS', 'ѡ': 'o', 'Ѡ': 'O',
-        'ѫ': 'u', 'Ѫ': 'U', 'ѭ': 'yu', 'Ѭ': 'YU', 'ѿ': 'ot', 'Ѿ': 'OT',
-        'ҋ': 'ch', 'Ҍ': 'CH', 'ҍ': 'c', 'Ҏ': 'C', 'ѩ': 'ya', 'Ѩ': 'YA',
+        # A mappings
+        "A": "A", "Α": "A", "А": "A", "Ꭺ": "A", "ᗅ": "A", "ᴀ": "A", "ꓮ": "A", "ꭺ": "A", "Ａ": "A", "а": "A",
 
-        # Greek letters
-        'α': 'a', 'Α': 'A', 'β': 'b', 'Β': 'B', 'γ': 'g', 'Γ': 'G',
-        'δ': 'd', 'Δ': 'D', 'ε': 'e', 'Ε': 'E', 'ζ': 'z', 'Ζ': 'Z',
-        'η': 'n', 'Η': 'N', 'θ': 'th', 'Θ': 'TH', 'ι': 'i', 'Ι': 'I',
-        'κ': 'k', 'Κ': 'K', 'λ': 'l', 'Λ': 'L', 'μ': 'm', 'Μ': 'M',
-        'ν': 'n', 'Ν': 'N', 'ξ': 'x', 'Ξ': 'X', 'ο': 'o', 'Ο': 'O',
-        'π': 'p', 'Π': 'P', 'ρ': 'r', 'Ρ': 'R', 'σ': 's', 'Σ': 'S',
-        'τ': 't', 'Τ': 'T', 'υ': 'u', 'Υ': 'U', 'φ': 'f', 'Φ': 'F',
-        'χ': 'ch', 'Χ': 'CH', 'ψ': 'ps', 'Ψ': 'PS', 'ω': 'o', 'Ω': 'O',
+        # V mappings
+        "V": "V", "Ѵ": "V", "٧": "V", "۷": "V", "Ꮩ": "V", "ᐯ": "V", "Ⅴ": "V", "ⴸ": "V", "ꓦ": "V",
+        "ꛟ": "V", "Ｖ": "V",
 
-        # Latin extended letters
-        'á': 'a', 'Á': 'A', 'à': 'a', 'À': 'A', 'â': 'a', 'Â': 'A',
-        'ä': 'a', 'Ä': 'A', 'ã': 'a', 'Ã': 'A', 'å': 'a', 'Å': 'A',
-        'æ': 'ae', 'Æ': 'AE', 'ç': 'c', 'Ç': 'C', 'é': 'e', 'É': 'E',
-        'è': 'e', 'È': 'E', 'ê': 'e', 'Ê': 'E', 'ë': 'e', 'Ë': 'E',
-        'í': 'i', 'Í': 'I', 'ì': 'i', 'Ì': 'I', 'î': 'i', 'Î': 'I',
-        'ï': 'i', 'Ï': 'I', 'ñ': 'n', 'Ñ': 'N', 'ó': 'o', 'Ó': 'O',
-        'ò': 'o', 'Ò': 'O', 'ô': 'o', 'Ô': 'O', 'ö': 'o', 'Ö': 'O',
-        'õ': 'o', 'Õ': 'O', 'ø': 'o', 'Ø': 'O', 'œ': 'oe', 'Œ': 'OE',
-        'ú': 'u', 'Ú': 'U', 'ù': 'u', 'Ù': 'U', 'û': 'u', 'Û': 'U',
-        'ü': 'u', 'Ü': 'U', 'ý': 'y', 'Ý': 'Y', 'ÿ': 'y', 'Ÿ': 'Y',
-        'ĵ': 'j', 'Ĵ': 'J', 'ğ': 'g', 'Ğ': 'G', 'ş': 's', 'Ş': 'S',  # Turkish
-        'ő': 'o', 'Ő': 'O', 'ű': 'u', 'Ű': 'U',  # Hungarian
+        # S mappings
+        "S": "S", "Ѕ": "S", "Տ": "S", "Ꮥ": "S", "Ꮪ": "S", "ꓢ": "S", "Ｓ": "S",
 
-        # Phonetic symbols and others
-        'ʙ': 'B', 'ʏ': 'Y', 'ʀ': 'R', 'ᴍ': 'M', 'ᴀ': 'A',
-        'ʃ': 'sh', 'ʒ': 'zh',  # Phonetic symbols
-        'ℬ': 'B', 'ℰ': 'E', 'ℒ': 'L', 'ℳ': 'M', 'ℙ': 'P', 'ℛ': 'R',
-        'Ⅽ': 'C', 'Ⅾ': 'D', 'Ⅿ': 'M', 'Ⅹ': 'X',
+        # C mappings
+        "C": "C", "Ϲ": "C", "С": "C", "Ꮯ": "C", "ᑕ": "C", "ℂ": "C", "ℭ": "C", "Ⅽ": "C", "⊂": "C", "Ⲥ": "C",
+        "⸦": "C", "ꓚ": "C", "Ｃ": "C", "с": "C",
 
-        # Enclosed Alphanumeric
-        '⒜': 'a', '⒝': 'b', '⒞': 'c', '⒟': 'd', '⒠': 'e',
-        '⒡': 'f', '⒢': 'g', '⒣': 'h', '⒤': 'i', '⒥': 'j',
-        '⒦': 'k', '⒧': 'l', '⒨': 'm', '⒩': 'n', '⒪': 'o',
-        '⒫': 'p', '⒬': 'q', '⒭': 'r', '⒮': 's', '⒯': 't',
-        '⒰': 'u', '⒱': 'v', '⒲': 'w', '⒳': 'x', '⒴': 'y',
-        '⒵': 'z'
+        # R mappings
+        "R": "R", "Ʀ": "R", "ʀ": "R", "Ꭱ": "R", "Ꮢ": "R", "ᖇ": "R", "ᚱ": "R", "ℛ": "R", "ℜ": "R", "ℝ": "R",
+        "ꓣ": "R", "ꭱ": "R", "ꮢ": "R", "Ｒ": "R", "г": "R",
+
+        # I mappings
+        "I": "I", "Ι": "I", "І": "I", "Ꮖ": "I", "Ⅰ": "I", "Ⲓ": "I", "ꓲ": "I", "Ｉ": "I", "і": "I",
+
+        # P mappings
+        "P": "P", "Ρ": "P", "Р": "P", "Ꮲ": "P", "ᑭ": "P", "ᴘ": "P", "ᴩ": "P", "ℙ": "P", "Ⲣ": "P", "ꓑ": "P",
+        "ꮲ": "P", "Ｐ": "P", "р": "P",
+
+        # T mappings
+        "T": "T", "Τ": "T", "τ": "T", "Т": "T", "Ꭲ": "T", "ᴛ": "T", "⊤": "T", "⟙": "T", "Ⲧ": "T", "ꓔ": "T",
+        "ꭲ": "T", "Ｔ": "T"
     }
 
-    # Replace lookalike characters in the text
-    normalized_text = ''.join(lookalike_mapping.get(char, char) for char in text)
+    # Convert the input string
+    converted_string = ''.join(conversion_map.get(char, char) for char in input_string)
 
-    return normalized_text
+    return converted_string
 
 
 def message_cleanup(_msg: str, space_js: bool) -> str:
@@ -125,8 +95,8 @@ async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool)
 
 async def js_slur_checker(ctx: discord.Message) -> None:
     if ctx.channel.id != 1259208950390329475:
-        regex = re.sub(r'[^a-zA-ZА-Яа-яЁё0-9\s]', '', ctx.content)
-        msg = normalize_lookalike_letters(regex.lower())
+        regex = re.sub(r'[^\w\sА-Яа-яЁё]', '', ctx.content)
+        msg = normalize_lookalike_letters(regex.lower()).lower()
         slur_used = False
         js_space_check = "javascript" in msg.replace(" ", "")
         for i in J_SLURS:
