@@ -85,7 +85,7 @@ async def js_slur_handler(ctx: discord.Message, message: str, space_check: bool)
     await webhook.send(
         content=message_cleanup(message, space_check),
         username=f"{str(ctx.author.display_name)} - {str(ctx.author)}",
-        avatar_url=ctx.author.avatar.url
+        avatar_url=ctx.author.avatar.url if ctx.author.avatar.url != None else "https://ia800305.us.archive.org/31/items/discordprofilepictures/discordred.png"
     )
     await asyncio.sleep(1)
     await reply.delete()
